@@ -22,10 +22,8 @@ class HomeFragment() : Fragment() {
 
     private val adapter by lazy { Adapter() }
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
     private val homeViewModel by lazy {
-        HomeViewModel(db)
+        HomeViewModel()
     }
 
     override fun onCreateView(

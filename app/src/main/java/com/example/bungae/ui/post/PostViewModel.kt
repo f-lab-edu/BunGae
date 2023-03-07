@@ -1,20 +1,20 @@
 package com.example.bungae.ui.post
 
+import android.location.Address
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.bungae.data.ItemData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 
-class PostViewModel(
-    private val auth: FirebaseAuth,
-    private var db: FirebaseFirestore,
-) : ViewModel() {
+class PostViewModel() {
+
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val currentTime: Long = System.currentTimeMillis()
     private val dateFormat = SimpleDateFormat("yy-MM-dd_HH:mm:ss")

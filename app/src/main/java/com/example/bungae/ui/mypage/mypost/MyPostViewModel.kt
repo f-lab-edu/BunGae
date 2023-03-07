@@ -37,7 +37,7 @@ class MyPostViewModel(private val auth: FirebaseAuth,
             }
             .addOnFailureListener { e ->
                 Log.e("Failed to get data", e.toString())
-                _message.value = "데이"
+                _message.value = "데이터를 가져오는데 실패했습니다."
             }
     }
 }

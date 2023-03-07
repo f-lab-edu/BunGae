@@ -1,11 +1,9 @@
-package com.example.bungae.ui.message
+package com.example.bungae.ui.message.chatting_room
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.bungae.data.ChatListData
 import com.example.bungae.data.ChatModel
-import com.example.bungae.data.ProfileData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat

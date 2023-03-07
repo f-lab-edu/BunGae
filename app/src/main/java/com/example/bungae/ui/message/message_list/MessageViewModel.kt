@@ -1,13 +1,11 @@
-package com.example.bungae.ui.message
+package com.example.bungae.ui.message.message_list
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.bungae.data.ChatModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class MessageViewModel(
     private val auth: FirebaseAuth,

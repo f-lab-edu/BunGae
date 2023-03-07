@@ -1,13 +1,10 @@
-package com.example.bungae.singletone
+package com.example.bungae.singleton
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.bungae.data.ProfileData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
 
 object GetMyProfile {
     private var _myProfile = MutableLiveData<ProfileData>()

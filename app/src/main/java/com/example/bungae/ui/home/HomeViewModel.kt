@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.example.bungae.data.ItemData
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HomeViewModel(private val db: FirebaseFirestore) : ViewModel() {
+class HomeViewModel() : ViewModel() {
+
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val list: MutableList<ItemData> = mutableListOf()
 

@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -21,8 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BunGae"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBHTWt8J0f-sYI7lfBWV5U3VWMLPKWVprw" />
         <activity
-            android:name=".ui.message.ChattingRoomActivity"
+            android:name=".ui.message.chatting_room.ChattingRoomActivity"
             android:label="채팅방"/>
         <activity
             android:name=".ui.update.UpdatePostActivity"

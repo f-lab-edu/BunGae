@@ -11,7 +11,7 @@ import com.example.bungae.R
 import com.example.bungae.data.ChatInfoData
 import com.example.bungae.data.ChatListData
 import com.example.bungae.databinding.ItemMessageBinding
-import com.example.bungae.ui.message.ChattingRoomActivity
+import com.example.bungae.ui.message.chatting_room.ChattingRoomActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class MessageAdapter() : ListAdapter<ChatListData, MessageAdapter.MyViewHolder>(diffUtil) {

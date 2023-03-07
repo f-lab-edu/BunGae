@@ -14,7 +14,7 @@ import com.example.bungae.data.ChatInfoData
 import com.example.bungae.data.ItemData
 import com.example.bungae.data.ProfileData
 import com.example.bungae.databinding.ActivityDetailBinding
-import com.example.bungae.ui.message.ChattingRoomActivity
+import com.example.bungae.ui.message.chatting_room.ChattingRoomActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

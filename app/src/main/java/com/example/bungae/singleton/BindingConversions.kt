@@ -1,4 +1,4 @@
-package com.example.bungae.binding
+package com.example.bungae.singleton
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

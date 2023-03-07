@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_post"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="55dp"
@@ -93,9 +94,18 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:text="위치를 정해주세요!"
-        android:textSize="18sp"
-        android:background="@drawable/frame"
-        android:drawableRight="@drawable/icon_post_map"/>
+        android:textSize="14sp"
+        android:background="@drawable/frame" />
+<!--        android:drawableRight="@drawable/icon_post_map"/>-->
+
+    <fragment
+        android:id="@+id/fragment_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_map"
+        app:layout_constraintBottom_toTopOf="@+id/btn_completion"
+        class="com.example.bungae.ui.post.PostMapFragment" />
 
     <Button
         android:id="@+id/btn_completion"
@@ -108,5 +118,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

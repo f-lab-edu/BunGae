@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_message"
-        android:name="com.example.bungae.ui.message.MessageFragment"
+        android:name="com.example.bungae.ui.message.message_list.MessageFragment"
         android:label="@string/title_message"
         tools:layout="@layout/fragment_message" />
 
