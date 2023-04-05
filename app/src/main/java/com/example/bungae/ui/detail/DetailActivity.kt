@@ -67,7 +67,7 @@ class DetailActivity : AppCompatActivity() {
             profileData = it
         })
 
-        detailViewModel.porfileImage.observe(this, Observer {
+        detailViewModel.profileImage.observe(this, Observer {
             Glide.with(this).load(it).circleCrop().into(binding.imageDetailProfile)
         })
 

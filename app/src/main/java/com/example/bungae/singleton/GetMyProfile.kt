@@ -9,18 +9,20 @@ import javax.inject.Inject
 
 object GetMyProfile {
 
-    private var myProfile: ProfileData? = null
-
     suspend fun getMyProfile() : ProfileData? {
-        FirebaseFirestore.getInstance().collection("Profile")
-            .whereEqualTo("uid", FirebaseAuth.getInstance().currentUser?.uid)
-            .get()
-            .addOnSuccessListener { result ->
-                val item = result.toObjects(ProfileData::class.java)
-                if (item.size != 0) {
-                    myProfile = item.get(0)
-                }
-            }.await()
-        return myProfile
+        return try {
+            val result = FirebaseFirestore.getInstance().collection("Profile")
+                .whereEqualTo("uid", FirebaseAuth.getInstance().currentUser?.uid)
+                .get()
+                .await()
+            val item = result.toObjects(ProfileData::class.java)
+            if (item.isNotEmpty()) {
+                item[0]
+            } else {
+                null
+            }
+        } catch (e: java.lang.Exception) {
+            null
+        }
     }
 }

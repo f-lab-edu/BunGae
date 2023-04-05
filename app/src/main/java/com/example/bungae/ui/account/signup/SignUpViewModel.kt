@@ -3,8 +3,12 @@ package com.example.bungae.ui.account.signup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,17 +29,19 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun createAccount(email: String, passwd: String) {
-        if (email.isNotEmpty() && passwd.isNotEmpty()) {
-            auth.createUserWithEmailAndPassword(email, passwd)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _message.value = "계정 생성을 완료했습니다."
-                    } else {
-                        _message.value = "계정 생성에 실패하였습니다."
-                    }
+        viewModelScope.launch {
+            Dispatchers.IO
+            if (email.isNotEmpty() && passwd.isNotEmpty()) {
+                val authResult = auth.createUserWithEmailAndPassword(email, passwd).await()
+                if (authResult.user != null) {
+                    _message.value = "계정 생성을 완료했습니다."
+                } else {
+                    _message.value = "계정 생성에 실패하였습니다."
                 }
-        } else {
-            _message.value = "빈칸을 전부 채워주세요!"
+            } else {
+                _message.value = "빈칸을 전부 채워주세요!"
+            }
         }
+
     }
 }

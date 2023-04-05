@@ -4,10 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bungae.data.ChatModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
@@ -25,10 +29,21 @@ class ChattingRoomViewModel @Inject constructor(
     val chatData: LiveData<MutableList<ChatModel>>
         get() = _chatData
 
-    fun setChatData(destinationUid: String, senderNickname: String, receiverNickname: String?, message: String) {
+    fun setChatData(
+        destinationUid: String,
+        senderNickname: String,
+        receiverNickname: String?,
+        message: String
+    ) {
         val currentTime: Long = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat("yy-MM-dd_HH:mm:ss")
-        val comment = ChatModel.Comment(uid = auth.currentUser!!.uid, senderNickname = senderNickname, receiverNickname = receiverNickname ?: "user", message = message, timestamp = dateFormat.format(currentTime))
+        val comment = ChatModel.Comment(
+            uid = auth.currentUser!!.uid,
+            senderNickname = senderNickname,
+            receiverNickname = receiverNickname ?: "user",
+            message = message,
+            timestamp = dateFormat.format(currentTime)
+        )
 
         val chatModel = ChatModel()
 
@@ -36,15 +51,18 @@ class ChattingRoomViewModel @Inject constructor(
         chatModel.users.put(destinationUid, true)
         chatModel.comments.put("comment", comment)
 
-        db.collection("ChatRoom")
-            .document()
-            .set(chatModel)
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            Dispatchers.IO
+            try {
+                db.collection("ChatRoom")
+                    .document()
+                    .set(chatModel)
+                    .await()
                 Log.e("addOnSuccessListener", "메세지 보내기 성공")
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 Log.e("addOnFailureListener", e.toString())
             }
+        }
     }
 
     fun getChatData(destinationUid: String) {

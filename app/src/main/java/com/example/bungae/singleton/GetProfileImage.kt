@@ -10,15 +10,13 @@ import javax.inject.Inject
 
 object GetProfileImage {
 
-    private var uri: Uri? = null
-
-    suspend fun getProfileImage(uid: String) : Uri? {
-        val imgRef = FirebaseStorage.getInstance().reference.child("profile/image_${uid}.jpg")
-        imgRef.downloadUrl.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                uri = task.result
-            }
-        }.await()
-        return uri
+    suspend fun getProfileImage(uid: String): Uri? {
+        return try {
+            val imgRef = FirebaseStorage.getInstance().reference.child("profile/image_${uid}.jpg")
+            val downloadUrl = imgRef.downloadUrl.await()
+            downloadUrl
+        } catch (e: Exception) {
+            null
+        }
     }
 }
