@@ -4,27 +4,46 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bungae.data.ChatModel
-import com.example.bungae.singleton.FireBaseAuth
-import com.example.bungae.singleton.GetProfileImage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
-class ChattingRoomViewModel() : ViewModel() {
+@HiltViewModel
+class ChattingRoomViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
+) : ViewModel() {
 
     private val list: MutableList<ChatModel> = mutableListOf()
 
-    private val uid = FireBaseAuth.auth.currentUser!!.uid
+    private val uid = auth.currentUser!!.uid
 
     private var _chatData = MutableLiveData<MutableList<ChatModel>>()
     val chatData: LiveData<MutableList<ChatModel>>
         get() = _chatData
 
-    fun setChatData(destinationUid: String, senderNickname: String, receiverNickname: String?, message: String) {
+    fun setChatData(
+        destinationUid: String,
+        senderNickname: String,
+        receiverNickname: String?,
+        message: String
+    ) {
         val currentTime: Long = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat("yy-MM-dd_HH:mm:ss")
-        val comment = ChatModel.Comment(uid = FireBaseAuth.auth.currentUser!!.uid, senderNickname = senderNickname, receiverNickname = receiverNickname ?: "user", message = message, timestamp = dateFormat.format(currentTime))
+        val comment = ChatModel.Comment(
+            uid = auth.currentUser!!.uid,
+            senderNickname = senderNickname,
+            receiverNickname = receiverNickname ?: "user",
+            message = message,
+            timestamp = dateFormat.format(currentTime)
+        )
 
         val chatModel = ChatModel()
 
@@ -32,20 +51,23 @@ class ChattingRoomViewModel() : ViewModel() {
         chatModel.users.put(destinationUid, true)
         chatModel.comments.put("comment", comment)
 
-        FireBaseAuth.db.collection("ChatRoom")
-            .document()
-            .set(chatModel)
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            Dispatchers.IO
+            try {
+                db.collection("ChatRoom")
+                    .document()
+                    .set(chatModel)
+                    .await()
                 Log.e("addOnSuccessListener", "메세지 보내기 성공")
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 Log.e("addOnFailureListener", e.toString())
             }
+        }
     }
 
     fun getChatData(destinationUid: String) {
-        FireBaseAuth.db.collection("ChatRoom")
-            .whereEqualTo("users.${FireBaseAuth.auth.currentUser!!.uid}", true)
+        db.collection("ChatRoom")
+            .whereEqualTo("users.${auth.currentUser!!.uid}", true)
             .whereEqualTo("users.${destinationUid}", true)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {

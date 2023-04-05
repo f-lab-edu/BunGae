@@ -16,23 +16,25 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.bungae.R
 import com.example.bungae.databinding.FragmentMypageBinding
-import com.example.bungae.singleton.FireBaseAuth
 import com.example.bungae.ui.account.login.LoginActivity
 import com.example.bungae.ui.mypage.mypost.MyPostActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MyPageFragment : Fragment() {
+
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     private var _binding: FragmentMypageBinding? = null
 
@@ -40,9 +42,7 @@ class MyPageFragment : Fragment() {
 
     private var uriInfo: Uri? = null
 
-    private val  myPageViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MyPageViewModel::class.java)
-    }
+    private val myPageViewModel: MyPageViewModel by viewModels()
 
     private val permissionList = arrayOf(
         Manifest.permission.CAMERA,
@@ -143,7 +143,7 @@ class MyPageFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
-            FireBaseAuth.auth.signOut()
+            auth.signOut()
             startActivity(Intent(activity, LoginActivity::class.java))
         }
 

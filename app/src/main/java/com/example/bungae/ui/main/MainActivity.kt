@@ -2,7 +2,6 @@ package com.example.bungae.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -11,19 +10,23 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bungae.R
 import com.example.bungae.databinding.ActivityMainBinding
-import com.example.bungae.singleton.FireBaseAuth
 import com.example.bungae.ui.account.login.LoginActivity
-import com.example.bungae.ui.map.MapFragment
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    @Inject
+    lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (FireBaseAuth.auth.currentUser == null) {
+        if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 

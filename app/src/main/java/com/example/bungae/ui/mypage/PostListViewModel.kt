@@ -4,11 +4,22 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bungae.R
 import com.example.bungae.data.ItemData
-import com.example.bungae.singleton.FireBaseAuth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class PostListViewModel() : ViewModel() {
+@HiltViewModel
+class PostListViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore
+) : ViewModel() {
 
     private val list: MutableList<ItemData> = mutableListOf()
 
@@ -21,42 +32,46 @@ class PostListViewModel() : ViewModel() {
         get() = _message
 
     fun getFireStorage() {
-        FireBaseAuth.db.collection("ItemInfo")
-            .get()
-            .addOnSuccessListener { results ->
+        viewModelScope.launch {
+            Dispatchers.IO
+            try {
+                val dbResult = db.collection("ItemInfo")
+                    .get()
+                    .await()
                 list.clear()
-                for (result in results) {
+                for (result in dbResult) {
                     val item = result.toObject(ItemData::class.java)
                     list.add(item)
                 }
-
                 list.sortByDescending { it.date }
                 categoryCheck()
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 Log.e("Failed to get data", e.toString())
                 _message.value = "데이터를 가져오는데 실패했습니다."
             }
+        }
     }
 
     fun getMyPostList() {
-        FireBaseAuth.db.collection("ItemInfo")
-            .whereEqualTo("uid", FireBaseAuth.auth.currentUser!!.uid)
-            .get()
-            .addOnSuccessListener { results ->
+        viewModelScope.launch {
+            Dispatchers.IO
+            try {
+                val dbResult = db.collection("ItemInfo")
+                    .whereEqualTo("uid", auth.currentUser!!.uid)
+                    .get()
+                    .await()
                 list.clear()
-                for (result in results) {
+                for (result in dbResult) {
                     val item = result.toObject(ItemData::class.java)
                     list.add(item)
                 }
-
                 list.sortByDescending { it.date }
                 categoryCheck()
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 Log.e("Failed to get data", e.toString())
                 _message.value = "데이터를 가져오는데 실패했습니다."
             }
+        }
     }
 
     private fun categoryCheck() {
@@ -66,8 +81,8 @@ class PostListViewModel() : ViewModel() {
                 "카페 투어" -> i.category = R.drawable.img_coffee.toString()
                 "운동" -> i.category = R.drawable.img_running.toString()
                 "맛집 탐방" -> i.category = R.drawable.img_dinner.toString()
-                "안주와 술" -> i.category =  R.drawable.img_beer.toString()
-                "영화" ->i.category =  R.drawable.img_movie.toString()
+                "안주와 술" -> i.category = R.drawable.img_beer.toString()
+                "영화" -> i.category = R.drawable.img_movie.toString()
             }
         }
         _itemList.value = list
