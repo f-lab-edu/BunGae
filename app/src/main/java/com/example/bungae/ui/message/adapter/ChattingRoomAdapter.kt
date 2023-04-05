@@ -1,33 +1,36 @@
 package com.example.bungae.ui.message.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.net.Uri
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.bungae.data.ChatModel
 import com.example.bungae.databinding.ItemChattingBinding
-import com.example.bungae.singleton.FireBaseAuth
-import com.example.bungae.singleton.GetProfileImage
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class ChattingRoomAdapter(private val uri: Uri?) : ListAdapter<ChatModel, ChattingRoomAdapter.MyViewHolder>(diffUtil) {
+class ChattingRoomAdapter(
+    private val uri: Uri?,
+    private val auth: FirebaseAuth
+    ) : ListAdapter<ChatModel, ChattingRoomAdapter.MyViewHolder>(diffUtil) {
 
-    class MyViewHolder(private val binding: ItemChattingBinding, private var uri: Uri?) :
+    class MyViewHolder(
+        private val binding: ItemChattingBinding,
+        private var uri: Uri?,
+        private val auth: FirebaseAuth
+        ) :
         RecyclerView.ViewHolder(binding.root) {
         val root = binding.root
 
         fun bind(item: ChatModel) {
-            if (item.comments.get("comment")?.uid == FireBaseAuth.auth.currentUser?.uid) {
+            if (item.comments.get("comment")?.uid == auth.currentUser?.uid) {
                 binding.tvChattingNickname.text = item.comments.get("comment")?.senderNickname
                 binding.tvChattingMessage.text = item.comments.get("comment")?.message
                 binding.tvChattingTimestamp.text = item.comments.get("comment")?.timestamp
@@ -48,7 +51,7 @@ class ChattingRoomAdapter(private val uri: Uri?) : ListAdapter<ChatModel, Chatti
         val binding: ItemChattingBinding = ItemChattingBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return MyViewHolder(binding, uri)
+        return MyViewHolder(binding, uri, auth)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

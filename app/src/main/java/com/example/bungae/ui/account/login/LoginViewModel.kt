@@ -3,10 +3,14 @@ package com.example.bungae.ui.account.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.bungae.singleton.FireBaseAuth
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LoginViewModel() : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
+) : ViewModel() {
 
     private var _message = MutableLiveData<Boolean>()
     val message: LiveData<Boolean>
@@ -22,7 +26,7 @@ class LoginViewModel() : ViewModel() {
 
     fun signIn(email: String, passwd:String) {
         if (email.isNotEmpty() && passwd.isNotEmpty()) {
-            FireBaseAuth.auth.signInWithEmailAndPassword(email, passwd)
+            auth.signInWithEmailAndPassword(email, passwd)
                 .addOnCompleteListener { task ->
                     _message.value = task.isSuccessful
                 }

@@ -16,15 +16,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.bungae.R
 import com.example.bungae.databinding.FragmentPostBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class PostFragment : Fragment() {
 
     private var _binding: FragmentPostBinding? = null
@@ -36,7 +39,6 @@ class PostFragment : Fragment() {
     private val postViewModel by lazy {
         ViewModelProvider(requireActivity()).get(PostViewModel::class.java)
     }
-
     private lateinit var navController: NavController
 
     private val permissionList = arrayOf(

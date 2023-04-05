@@ -13,6 +13,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -21,17 +22,17 @@ import com.example.bungae.R
 import com.example.bungae.data.ItemData
 import com.example.bungae.databinding.ActivityUpdatePostBinding
 import com.example.bungae.ui.post.PostViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class UpdatePostActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUpdatePostBinding
 
     private var uriInfo: Uri? = null
 
-    private val updatePostViewModel by lazy {
-        ViewModelProvider(this).get(PostViewModel::class.java)
-    }
+    private val updatePostViewModel: PostViewModel by viewModels()
 
     private val permissionList = arrayOf(
         Manifest.permission.CAMERA,

@@ -6,9 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bungae.R
 import com.example.bungae.data.ItemData
-import com.example.bungae.singleton.FireBaseAuth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PostListViewModel() : ViewModel() {
+@HiltViewModel
+class PostListViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore
+) : ViewModel() {
 
     private val list: MutableList<ItemData> = mutableListOf()
 
@@ -21,7 +28,7 @@ class PostListViewModel() : ViewModel() {
         get() = _message
 
     fun getFireStorage() {
-        FireBaseAuth.db.collection("ItemInfo")
+        db.collection("ItemInfo")
             .get()
             .addOnSuccessListener { results ->
                 list.clear()
@@ -40,8 +47,8 @@ class PostListViewModel() : ViewModel() {
     }
 
     fun getMyPostList() {
-        FireBaseAuth.db.collection("ItemInfo")
-            .whereEqualTo("uid", FireBaseAuth.auth.currentUser!!.uid)
+        db.collection("ItemInfo")
+            .whereEqualTo("uid", auth.currentUser!!.uid)
             .get()
             .addOnSuccessListener { results ->
                 list.clear()

@@ -6,12 +6,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bungae.data.ProfileData
-import com.example.bungae.singleton.FireBaseAuth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ProfileViewModel() : ViewModel() {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
+    private val imageStorage: FirebaseStorage
+) : ViewModel() {
 
     private var _message = MutableLiveData<String>()
     val message: LiveData<String>
@@ -26,7 +32,7 @@ class ProfileViewModel() : ViewModel() {
         get() = _checkFirestore
 
     fun checkNickName(nickName: String) {
-        FireBaseAuth.db.collection("Profile")
+        db.collection("Profile")
             .whereEqualTo("nickname", nickName)
             .get()
             .addOnSuccessListener { results ->
@@ -42,13 +48,13 @@ class ProfileViewModel() : ViewModel() {
             _message.value = "사용할 닉네임을 입력해주세요."
         } else {
             val profileData = ProfileData(
-                uid = FireBaseAuth.auth.currentUser!!.uid,
+                uid = auth.currentUser!!.uid,
                 nickname = nickName,
                 age = age,
                 gender = gender,
             )
 
-            FireBaseAuth.db.collection("Profile").document(FireBaseAuth.auth.currentUser!!.uid)
+            db.collection("Profile").document(auth.currentUser!!.uid)
                 .set(profileData)
                 .addOnSuccessListener {
                     _message.value = "프로필 등록에 성공하였습니다."
@@ -63,8 +69,8 @@ class ProfileViewModel() : ViewModel() {
 
     fun uploadImageToFirebase(uriInfo: Uri?) {
         val imageRef =
-            FirebaseStorage.getInstance().reference.child("profile/")
-                .child("image_${FireBaseAuth.auth.currentUser!!.uid}.jpg")
+            imageStorage.reference.child("profile/")
+                .child("image_${auth.currentUser!!.uid}.jpg")
         imageRef.putFile(uriInfo!!)
             .addOnSuccessListener {
             }

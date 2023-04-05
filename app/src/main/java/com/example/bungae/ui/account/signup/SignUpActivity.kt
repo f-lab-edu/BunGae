@@ -3,18 +3,19 @@ package com.example.bungae.ui.account.signup
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.bungae.databinding.ActivitySignupBinding
 import com.example.bungae.ui.account.profile.ProfileActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
-    private val signUpActivity by lazy {
-        ViewModelProvider(this).get(SignUpViewModel::class.java)
-    }
+
+    private val signUpActivity: SignUpViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

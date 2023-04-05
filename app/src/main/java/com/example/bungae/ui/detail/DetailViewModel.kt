@@ -7,11 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bungae.data.ItemData
 import com.example.bungae.data.ProfileData
-import com.example.bungae.singleton.FireBaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class  DetailViewModel() : ViewModel() {
+@HiltViewModel
+class  DetailViewModel @Inject constructor(
+    private val db: FirebaseFirestore,
+    private val imageStorage: FirebaseStorage
+) : ViewModel() {
 
     private var _profileDataList = MutableLiveData<ProfileData>()
     val profileDataList: LiveData<ProfileData>
@@ -26,7 +31,7 @@ class  DetailViewModel() : ViewModel() {
         get() = _deleteResult
 
     fun getProfileData(user: String) {
-        FireBaseAuth.db.collection("Profile")
+        db.collection("Profile")
             .whereEqualTo("uid", user)
             .get()
             .addOnSuccessListener { result ->
@@ -39,7 +44,7 @@ class  DetailViewModel() : ViewModel() {
     }
 
     fun getProfileImage(user: String) {
-        val imgRef = FirebaseStorage.getInstance().reference.child("profile/image_${user}.jpg")
+        val imgRef = imageStorage.reference.child("profile/image_${user}.jpg")
         imgRef.downloadUrl.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 _porfileImage.value = task.result
@@ -50,7 +55,7 @@ class  DetailViewModel() : ViewModel() {
     }
 
     fun deleteItem(item: ItemData) {
-        FireBaseAuth.db.collection("ItemInfo")
+        db.collection("ItemInfo")
             .document("${item.uid}_${item.date}")
             .delete()
             .addOnSuccessListener {
