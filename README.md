@@ -5,33 +5,6 @@ BunGae 앱은 다양한 활동을 다양한 사람들과 급 번개 모임을 �
 <br>
 <br>
 
-### 순서도
-----------
-<!-- ![1](https://user-images.githubusercontent.com/72846127/225082721-b15b8f99-69de-463e-8500-31ac636ed7d5.png)
-<br>
-![2](https://user-images.githubusercontent.com/72846127/225082730-fa7a640c-8d8d-4948-8061-27961a37ae8f.png)
-<br>
-![3](https://user-images.githubusercontent.com/72846127/225082736-99b86667-19a7-4a9c-a783-93cb2868cfba.png)
-<br>
-![4](https://user-images.githubusercontent.com/72846127/225082738-99e614b6-0e21-493b-8e9c-2453109a55de.png)
-<br>
-![5](https://user-images.githubusercontent.com/72846127/225082740-fc5497a3-4529-4e2e-9bf4-5589aeebe13b.png)
-<br>  -->
-#### 회원가입
-![image](https://user-images.githubusercontent.com/72846127/229263000-0e919a7c-70dc-433e-a6b3-ba03a7f9d501.png)
-<br>
-#### 게시글 등록
-![image](https://user-images.githubusercontent.com/72846127/229263005-a2c80a1b-d5c4-4f08-ac7b-285608241162.png)
-<br>
-#### 채팅
-![image](https://user-images.githubusercontent.com/72846127/229262984-b5ddc00c-bf0d-4448-8d27-333e43600f9d.png)
-<br>
-
-
-
-<br>
-<br>
-<br>
 
 ### 주요 기술
 ---------
